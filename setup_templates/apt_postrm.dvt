@@ -1,0 +1,11 @@
+#!/bin/sh -e
+
+if [ "$1" = remove ] ; then
+
+  # echo "Remove records from unattended updates"
+  # ( sed -i '/Google/d' /etc/apt/apt.conf.d/50unattended-upgrades )  && true
+
+  echo "Remove possible Skype repositories"
+  rm -f /etc/apt/sources.list.d/skype-stable.list
+
+fi

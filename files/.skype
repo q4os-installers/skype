@@ -1,0 +1,17 @@
+#!/bin/sh
+
+KDE_FULL_SESSION="true" KDEHOME="$TDEHOME" /usr/bin/skypeforlinux "$@"
+
+#if nvidia drivers in use, we need to install additional package(s) on amd64 arch
+if [ "$?" = "127" ] ; then
+  if [ "$( dpkg --print-architecture )" = "amd64" ] ; then
+    TMPFL1="/tmp/skypelog_$( id -un ).tmp"
+    ( /usr/bin/skypeforlinux --version 2>&1 ) | grep -i 'error while loading shared libraries: libGL.so.1' > $TMPFL1 #the complete message: 'skype: error while loading shared libraries: libGL.so.1: cannot open shared object file: No such file or directory'
+    if [ -n "$( cat $TMPFL1 )" ] ; then
+      #the 'if' condition could be simplified to:    if [ -n "$( ( /usr/bin/skypeforlinux --version 2>&1 ) | grep -i 'error while loading shared libraries: libGL.so.1' )" ] ; then
+      #echo "nvidia driver in use, needed library not installed"
+      #kdialog --icon "skype" --title "Skype info" --caption "" --msgbox "<p>You are using accelerated video drivers, so you need to install<br><br><b>[ libgl1-nvidia-glx:i386 ]</b><br><br>package for Skype to work properly. Please install this package from regular or backports repository, depending on video drivers you are using, and run Skype again.<br><br> </p>"
+      kdialog --icon "skype" --title "Skype info" --caption "" --msgbox "<p>You are using accelerated video drivers, so you need to install<br><br><b>[ libgl1-nvidia-glx ]</b><br><br>package for Skype to work properly. Please install this package from regular or backports repository, depending on video drivers you are using, and run Skype again.<br><br> </p>"
+    fi
+  fi
+fi
